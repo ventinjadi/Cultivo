@@ -224,6 +224,7 @@ function meta(p,ancestors=new Set()){
    eligible:(start>eligible?start:eligible);
  }
  if(p.type==='fixed'){
+  if(start>p.end)return {...normal,start:null,status:'wait',finish:null,blockedBy:'Fim do período anterior posterior à data final'};
   const status=today()<start?'upcoming':today()>p.end?'ended':'active';
   return {...normal,start,status,finish:status==='ended'?p.end:null,
    passed:Math.max(0,Math.min(target,dayDiff(start,today())+1))};
@@ -342,6 +343,15 @@ function newPromise(existing=null){
   if(credits&&(!asOf||asOf>today())){alert('Informe uma data válida para o progresso anterior.');return}
   if(kind==='sequence'&&credits&&asOf<start&&!depId)start=asOf;
   if(kind==='fixed'&&credits&&asOf<start){alert('O progresso anterior não pode ocorrer antes da data de início.');return}
+  if(depId&&credits){
+   const predecessor=state.promises.find(x=>x.id===depId),m=predecessor?meta(predecessor):null;
+   if(!m||!['completed','ended'].includes(m.status)){
+    alert('Os dias anteriores só podem ser creditados depois que a promessa predecessora terminar.');return;
+   }
+   if(asOf<addDays(m.finish,1)){
+    alert('A data do progresso anterior precisa ser posterior ao fim da promessa predecessora.');return;
+   }
+  }
   if(kind==='fixed'&&depId){
    const predecessor=state.promises.find(x=>x.id===depId),m=predecessor?meta(predecessor):null;
    if(m?.finish&&addDays(m.finish,1)>end){alert('A promessa escolhida termina depois da data final desta. Ajuste o período.');return}
@@ -487,8 +497,16 @@ function prayerDialog(p=null){
   }
  };
 }
-function promiseDetails(p){const m=meta(p);const dates=Object.keys(p.log||{}).sort().reverse().slice(0,25);modal(p.name,`<p>${p.type==='fixed'?'Período de '+fmt(p.start)+' a '+fmt(p.end):'Dias contados de orações'} · ${m.target} dias = ${weeks(m.target)}</p><p><b>${m.done} dias concluídos</b> de ${m.target}. Situação: ${badge(m.status)}.</p>${p.type==='sequence'&&m.status==='wait'?`<p class="queue-note">Esta promessa aguarda a conclusão da anterior da fila.</p>`:''}<div class="section-head"><h3>Histórico recente</h3></div>${dates.length?dates.map(date=>`<div class="library-row"><span>${fmt(date)}</span><span class="muted">${(p.log[date]||[]).length}/${p.prayerIds.length} orações</span><button class="btn small" data-jump="${date}">Abrir dia</button></div>`).join(''):`<p class="muted">Ainda não há orações marcadas.</p>`}<div class="modal-actions"><button class="btn" data-close>Fechar</button><button class="btn primary" data-jump="${today()}">Ir para hoje</button></div>`)}
-
+function promiseDetails(p){
+ const m=meta(p),dep=dependencyFor(p),dates=Object.keys(p.log||{}).sort().reverse().slice(0,25);
+ modal(p.name,`<p>${p.type==='fixed'?'Período de '+fmt(p.start)+' a '+fmt(p.end):'Dias contados de oração'} · ${m.target} dias = ${weeks(m.target)}</p>
+ ${dep?`<p><b>Começa após:</b> ${esc(dep.name)}${m.status==='wait'?' · Aguardando conclusão':' · Início liberado para '+fmt(m.start)}</p>`:''}
+ <p><b>${m.done}/${m.target} dias realizados.</b> Restam ${Math.max(0,m.target-m.done)} dias. Situação: ${badge(m.status)}.</p>
+ ${m.credited?`<p class="subtitle">${m.credited} dias anteriores informados manualmente${p.creditedAsOf?' até '+fmt(p.creditedAsOf):''}. Outros ${m.recorded} dias completos foram registrados no aplicativo, sem duplicar a contagem.</p>`:''}
+ <div class="section-head"><h3>Histórico dos registros</h3></div>
+ ${dates.length?dates.map(date=>`<div class="library-row"><span>${fmt(date)}</span><span class="muted">${(p.log[date]||[]).length}/${p.prayerIds.length} orações</span><button class="btn small" data-jump="${date}">Abrir dia</button></div>`).join(''):`<p class="muted">Nenhuma marcação individual registrada.</p>`}
+ <div class="modal-actions"><button class="btn" data-close>Fechar</button><button class="btn primary" data-jump="${today()}">Ir para hoje</button></div>`);
+}
 function isPrayerChecked(id,date){
  const active=state.promises.filter(p=>canLog(p,date)&&p.prayerIds.includes(id));
  return active.length?active.every(p=>(p.log?.[date]||[]).includes(id)):(state.dailyPrayerLog?.[date]||[]).includes(id);
