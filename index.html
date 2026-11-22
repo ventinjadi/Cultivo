@@ -192,15 +192,68 @@ const save=()=>{
  });
  return saveChain;
 };
+
 const ordered=()=>state.promises.filter(p=>p.type==='sequence').sort((a,b)=>(a.order??0)-(b.order??0));
 const allDays=p=>Object.keys(p.log||{}).filter(k=>(p.prayerIds?.length||0)>0&&p.prayerIds.every(id=>(p.log[k]||[]).includes(id))).sort();
-function meta(p){const target=p.type==='fixed'?Math.max(1,dayDiff(p.start,p.end)+1):p.days;const done=allDays(p).length; if(p.type==='fixed'){const passed=Math.max(0,Math.min(target,dayDiff(p.start,today())+1));return {target,done,start:p.start,end:p.end,passed,status:today()<p.start?'upcoming':today()>p.end?'ended':'active',percent:Math.min(100,Math.round(passed/target*100))}}
-const queue=ordered(),index=queue.findIndex(x=>x.id===p.id),prev=queue[index-1];const prevMeta=prev?meta(prev):null;const unlocked=!prev||prevMeta.status==='completed';const last=prev?allDays(prev).slice(-1)[0]:null;const start=prev?last?addDays(last,1):null:p.start;const status=!unlocked?'wait':done>=target?'completed':start&&today()<start?'upcoming':'active';return {target,done,start,end:null,passed:done,status,percent:Math.min(100,Math.round(done/target*100))}}
+const priorCount=p=>Math.max(0,Math.floor(Number(p.creditedDays)||0));
+const dependencyFor=p=>{
+ if(Object.prototype.hasOwnProperty.call(p,'dependsOnId'))
+   return state.promises.find(x=>x.id===p.dependsOnId)||null;
+ if(p.type!=='sequence')return null;
+ const queue=ordered(),index=queue.findIndex(x=>x.id===p.id);
+ return index>0?queue[index-1]:null;
+};
+function meta(p,ancestors=new Set()){
+ const target=p.type==='fixed'?Math.max(1,dayDiff(p.start,p.end)+1):Math.max(1,Math.floor(Number(p.days)||1));
+ const recorded=allDays(p),credited=priorCount(p),rawDone=credited+recorded.length,done=Math.min(target,rawDone);
+ const normal={target,done,rawDone,recorded:recorded.length,credited,
+  start:p.start||null,end:p.type==='fixed'?p.end:null,passed:done,percent:Math.min(100,Math.round(done/target*100))};
+ if(ancestors.has(p.id))return {...normal,status:'wait',start:null,blockedBy:'Dependência circular',finish:null};
+ const dependency=dependencyFor(p);
+ let predecessor=null;
+ if(dependency){
+  const path=new Set(ancestors);path.add(p.id);
+  predecessor=meta(dependency,path);
+  if(!['completed','ended'].includes(predecessor.status)||!predecessor.finish)
+   return {...normal,status:'wait',start:null,blockedBy:dependency.name,finish:null};
+ }
+ let start=p.start||today();
+ if(dependency){
+  const eligible=addDays(predecessor.finish,1);
+  start=(!Object.prototype.hasOwnProperty.call(p,'dependsOnId')&&p.type==='sequence')?
+   eligible:(start>eligible?start:eligible);
+ }
+ if(p.type==='fixed'){
+  const status=today()<start?'upcoming':today()>p.end?'ended':'active';
+  return {...normal,start,status,finish:status==='ended'?p.end:null,
+   passed:Math.max(0,Math.min(target,dayDiff(start,today())+1))};
+ }
+ const needed=Math.max(0,target-credited);
+ let finish=null;
+ if(rawDone>=target){
+  if(needed===0)finish=p.creditedAsOf||today();
+  else finish=recorded[needed-1]||null;
+  if(finish&&p.creditedAsOf&&finish<p.creditedAsOf)finish=p.creditedAsOf;
+  if(finish&&finish<start)finish=start;
+ }
+ const status=today()<start?'upcoming':rawDone>=target?'completed':'active';
+ return {...normal,start,end:null,status,finish:status==='completed'?finish:null};
+}
 function canLog(p,date){const m=meta(p);return date<=today()&&m.status!=='wait'&&!!m.start&&date>=m.start&&(p.type==='fixed'?date<=p.end:m.status!=='completed'||!!p.log?.[date])}
-const badge=s=>({active:'Em andamento',wait:'Na fila',upcoming:'Agendada',completed:'Concluída',ended:'Período encerrado'})[s]||s;
-function meter(p,m){return `<div class="meter"><div class="fill" style="width:${m.percent}%"></div></div><div class="statrow"><span><b>${m.done}</b>/${m.target} dias de orações concluídos</span><span>${m.percent}% ${p.type==='sequence'?'concluído':'do período transcorrido'}</span></div>`}
-function card(p,compact=false){const m=meta(p);return `<article class="card"><div class="card-head"><div><div class="eyebrow">${p.type==='sequence'?'Promessa sequencial':'Promessa por período'}</div><h3>${esc(p.name)}</h3></div><span class="pill ${m.status==='wait'?'wait':m.status==='upcoming'?'upcoming':m.status==='completed'?'done':''}">${badge(m.status)}</span></div>${p.intention?`<p class="subtitle">${esc(p.intention)}</p>`:''}<p class="subtitle">${p.type==='fixed'?`${fmt(m.start)} a ${fmt(m.end)}`:m.start?`Início: ${fmt(m.start)}`:'Início após conclusão da promessa anterior'} · ${m.target} dias (${weeks(m.target)})</p>${meter(p,m)}<div class="card-actions">${compact?`<button class="btn small primary" data-open="${esc(p.id)}">Ver orações</button>`:`<button class="btn small" data-edit="${esc(p.id)}">Editar</button><button class="btn small" data-open="${esc(p.id)}">Ver orações</button><button class="btn small danger" data-delete="${esc(p.id)}">Excluir</button>`}</div></article>`}
-function summary(){let active=state.promises.filter(p=>meta(p).status==='active'),finished=state.promises.filter(p=>meta(p).status==='completed'),count=active.filter(p=>allDays(p).includes(viewDate)).length;return `<div class="summary"><div class="card"><div class="smalltext">Ativas</div><div class="value">${active.length}</div></div><div class="card"><div class="smalltext">Concluídas</div><div class="value">${finished.length}</div></div><div class="card"><div class="smalltext">Feitas no dia</div><div class="value">${count}/${active.length}</div></div></div>`}
+const badge=s=>({active:'Em andamento',wait:'Aguardando',upcoming:'Agendada',completed:'Concluída',ended:'Período encerrado'})[s]||s;
+function meter(p,m){return `<div class="meter"><div class="fill" style="width:${m.percent}%"></div></div><div class="statrow"><span><b>${m.done}</b>/${m.target} dias realizados</span><span>${m.percent}% concluído · faltam ${Math.max(0,m.target-m.done)} dias</span></div>`}
+function card(p,compact=false){const m=meta(p),dep=dependencyFor(p);
+ const schedule=p.type==='fixed'?(`${fmt(m.start||p.start)} a ${fmt(m.end)}`):
+ (m.start?`Início: ${fmt(m.start)}`:'Aguardando liberação');
+ return `<article class="card"><div class="card-head"><div><div class="eyebrow">${p.type==='sequence'?'Dias contados':'Período com datas'}</div><h3>${esc(p.name)}</h3></div><span class="pill ${m.status==='wait'?'wait':m.status==='upcoming'?'upcoming':m.status==='completed'?'done':''}">${badge(m.status)}</span></div>
+ ${p.intention?`<p class="subtitle">${esc(p.intention)}</p>`:''}
+ ${dep?`<p class="subtitle"><b>Começa após:</b> ${esc(dep.name)}${m.status==='wait'?' · Aguardando término':''}</p>`:''}
+ <p class="subtitle">${schedule} · ${m.target} dias (${weeks(m.target)})</p>
+ ${m.credited?`<p class="subtitle">Dias informados antes do registro: ${m.credited}</p>`:''}
+ ${meter(p,m)}
+ <div class="card-actions">${compact?`<button class="btn small primary" data-open="${esc(p.id)}">Ver orações</button>`:`<button class="btn small" data-edit="${esc(p.id)}">Editar</button><button class="btn small" data-open="${esc(p.id)}">Ver histórico</button><button class="btn small danger" data-delete="${esc(p.id)}">Excluir</button>`}</div></article>`;
+}
+function summary(){let active=state.promises.filter(p=>meta(p).status==='active'),finished=state.promises.filter(p=>['completed','ended'].includes(meta(p).status)),count=active.filter(p=>allDays(p).includes(viewDate)).length;return `<div class="summary"><div class="card"><div class="smalltext">Ativas</div><div class="value">${active.length}</div></div><div class="card"><div class="smalltext">Finalizadas</div><div class="value">${finished.length}</div></div><div class="card"><div class="smalltext">Feitas no dia</div><div class="value">${count}/${active.length}</div></div></div>`}
 function render(){document.title='Cultivo — orações e promessas';$('#todayTitle').textContent=new Date(today()+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});$$('.tab').forEach(x=>x.setAttribute('aria-selected',String(x.dataset.tab===tab)));const content=$('#content');if(tab==='hoje'){
   const active=state.promises.filter(p=>canLog(p,viewDate));
   const isDone=id=>{
