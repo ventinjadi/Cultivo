@@ -1,0 +1,26 @@
+{
+  "id": "/Cultivo/",
+  "name": "Cultivo — Um dia de cada vez",
+  "short_name": "Cultivo",
+  "description": "Seu espaço privado para acompanhar orações, promessas e constância.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101411",
+  "theme_color": "#101411",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

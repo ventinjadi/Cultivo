@@ -149,7 +149,13 @@ body.cultivo-authenticated #cultivo-login{display:none}
 #cultivo-sync-status{display:inline-block;margin-left:10px;color:#a1afa3;font-size:11px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="supabase-config.js"></script></head>
+<script src="supabase-config.js"></script><link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="application-name" content="Cultivo">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+</head>
 <body><div id="cultivo-login"><div class="cultivo-auth-box"><h1>🌱 Cultivo</h1><p>Um dia de cada vez. Entre para acessar seu espaço privado.</p><form id="cultivo-login-form"><label for="cultivo-email">E-mail</label><input id="cultivo-email" type="email" autocomplete="username" required><label for="cultivo-password">Senha</label><input id="cultivo-password" type="password" autocomplete="current-password" required><button id="cultivo-login-button" type="submit">Entrar</button><div id="cultivo-auth-msg" role="status"></div></form></div></div><main class="shell"><header class="top"><div class="brand"><div class="mark" aria-hidden="true"><svg width="33" height="33" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13C6.8 13 4 10.6 4 6c4.8 0 8 2.2 8 7Z"/><path d="M12 11c0-4.9 3.2-7.3 8-7.5 0 5-2.8 7.5-8 7.5Z"/><path d="M6.7 22h10.6"/></svg></div><div><h1>Cultivo</h1><small>Um dia de cada vez.</small></div></div><div class="top-actions"><button class="btn small" id="cultivo-logout">Sair</button><span id="cultivo-sync-status" aria-live="polite"></span><button class="btn small" id="exportBtn" title="Salvar cópia dos seus dados">⇩ Backup</button><button class="btn small" id="importBtn" title="Restaurar cópia">⇧ Restaurar</button><input type="file" id="fileInput" accept=".json,application/json" hidden></div></header><section class="intro"><div><div class="eyebrow">Minha jornada</div><h2>Seu momento de hoje.</h2><p>Suas orações e seus compromissos, todos os dias.</p></div><div class="today-date" id="todayTitle"></div></section><nav class="tabs" role="tablist"><button class="tab" data-tab="hoje" aria-selected="true">Hoje</button><button class="tab" data-tab="promessas" aria-selected="false">Promessas</button><button class="tab" data-tab="oracoes" aria-selected="false">Orações</button></nav><section id="content" aria-live="polite"></section><footer class="foot">Seus dados são salvos neste navegador. Faça backups para não perder seu histórico.</footer></main><div class="modal-back" id="modalBack"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
 <script>
 (()=>{'use strict';
@@ -322,4 +328,9 @@ async function initializeAuth(){
 initializeAuth();
 })();
 
+</script><script>
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+ window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js", { scope: "./" })
+   .catch(error => console.warn("Service worker indisponível:", error)));
+}
 </script></body></html>
