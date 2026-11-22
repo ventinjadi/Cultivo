@@ -213,7 +213,7 @@ const save=()=>{
   serverRevision=result.data.revision;
   lastSaveError=null;showStatus('Salvo');
  });
- return saveChain;
+ return saveChain.catch(()=>{});
 };
 
 const ordered=()=>state.promises.filter(p=>p.type==='sequence').sort((a,b)=>(a.order??0)-(b.order??0));
@@ -271,6 +271,7 @@ function card(p,compact=false){const m=meta(p),dep=dependencyFor(p);
  (m.start?`Início: ${fmt(m.start)}`:'Aguardando liberação');
  return `<article class="card"><div class="card-head"><div><div class="eyebrow">${p.type==='sequence'?'Dias contados':'Período com datas'}</div><h3>${esc(p.name)}</h3></div><span class="pill ${m.status==='wait'?'wait':m.status==='upcoming'?'upcoming':m.status==='completed'?'done':''}">${badge(m.status)}</span></div>
  ${p.intention?`<p class="subtitle">${esc(p.intention)}</p>`:''}
+ ${p.recoveryReviewNeeded&&(!p.prayerIds||!p.prayerIds.length)?`<p class="queue-note" style="margin-top:10px;margin-bottom:10px">⚠ Recuperada da captura. Selecione as orações desta promessa em <b>Editar</b>.</p>`:''}
  ${dep?`<p class="subtitle"><b>Começa após:</b> ${esc(dep.name)}${m.status==='wait'?' · Aguardando término':''}</p>`:''}
  <p class="subtitle">${schedule} · ${m.target} dias (${weeks(m.target)})</p>
  ${m.credited?`<p class="subtitle">Dias informados antes do registro: ${m.credited}</p>`:''}
