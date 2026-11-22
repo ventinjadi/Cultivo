@@ -147,8 +147,12 @@ body.cultivo-authenticated #cultivo-login{display:none}
 .cultivo-auth-box button:disabled{opacity:.5}
 #cultivo-auth-msg{margin-top:14px;color:#e9baa8;font-size:13px;min-height:22px;overflow-wrap:anywhere}
 #cultivo-sync-status{display:inline-block;margin-left:10px;color:#a1afa3;font-size:11px}
+[hidden]{display:none!important}
+#cultivo-passkey-login{background:#29382d;color:#e1ede2;border:1px solid #55735c;margin-top:12px}
+#cultivo-passkey-help{display:block;color:#a1afa3;font-size:12px;line-height:1.45;text-align:center;margin-top:11px}
+#cultivo-passkey-register{white-space:normal}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.min.js"></script>
 <script src="supabase-config.js"></script><link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
@@ -156,7 +160,7 @@ body.cultivo-authenticated #cultivo-login{display:none}
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
-<body><div id="cultivo-login"><div class="cultivo-auth-box"><h1>🌱 Cultivo</h1><p>Um dia de cada vez. Entre para acessar seu espaço privado.</p><form id="cultivo-login-form"><label for="cultivo-email">E-mail</label><input id="cultivo-email" type="email" autocomplete="username" required><label for="cultivo-password">Senha</label><input id="cultivo-password" type="password" autocomplete="current-password" required><button id="cultivo-login-button" type="submit">Entrar</button><div id="cultivo-auth-msg" role="status"></div></form></div></div><main class="shell"><header class="top"><div class="brand"><div class="mark" aria-hidden="true"><svg width="33" height="33" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13C6.8 13 4 10.6 4 6c4.8 0 8 2.2 8 7Z"/><path d="M12 11c0-4.9 3.2-7.3 8-7.5 0 5-2.8 7.5-8 7.5Z"/><path d="M6.7 22h10.6"/></svg></div><div><h1>Cultivo</h1><small>Um dia de cada vez.</small></div></div><div class="top-actions"><button class="btn small" id="cultivo-logout">Sair</button><span id="cultivo-sync-status" aria-live="polite"></span><button class="btn small" id="exportBtn" title="Salvar cópia dos seus dados">⇩ Backup</button><button class="btn small" id="importBtn" title="Restaurar cópia">⇧ Restaurar</button><input type="file" id="fileInput" accept=".json,application/json" hidden></div></header><section class="intro"><div><div class="eyebrow">Minha jornada</div><h2>Seu momento de hoje.</h2><p>Suas orações e seus compromissos, todos os dias.</p></div><div class="today-date" id="todayTitle"></div></section><nav class="tabs" role="tablist"><button class="tab" data-tab="hoje" aria-selected="true">Hoje</button><button class="tab" data-tab="promessas" aria-selected="false">Promessas</button><button class="tab" data-tab="oracoes" aria-selected="false">Orações</button></nav><section id="content" aria-live="polite"></section><footer class="foot">Seus dados são salvos neste navegador. Faça backups para não perder seu histórico.</footer></main><div class="modal-back" id="modalBack"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
+<body><div id="cultivo-login"><div class="cultivo-auth-box"><h1>🌱 Cultivo</h1><p>Um dia de cada vez. Entre para acessar seu espaço privado.</p><form id="cultivo-login-form"><label for="cultivo-email">E-mail</label><input id="cultivo-email" type="email" autocomplete="username" required><label for="cultivo-password">Senha</label><input id="cultivo-password" type="password" autocomplete="current-password" required><button id="cultivo-login-button" type="submit">Entrar</button><div id="cultivo-auth-msg" role="status"></div></form><button id="cultivo-passkey-login" type="button" hidden>Entrar com digital</button><small id="cultivo-passkey-help" hidden>Use a digital ou o desbloqueio do seu celular. Primeiro, cadastre sua chave de acesso após entrar com a senha.</small></div></div><main class="shell"><header class="top"><div class="brand"><div class="mark" aria-hidden="true"><svg width="33" height="33" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13C6.8 13 4 10.6 4 6c4.8 0 8 2.2 8 7Z"/><path d="M12 11c0-4.9 3.2-7.3 8-7.5 0 5-2.8 7.5-8 7.5Z"/><path d="M6.7 22h10.6"/></svg></div><div><h1>Cultivo</h1><small>Um dia de cada vez.</small></div></div><div class="top-actions"><button class="btn small" id="cultivo-passkey-register" type="button" hidden>Cadastrar digital</button><button class="btn small" id="cultivo-logout">Sair</button><span id="cultivo-sync-status" aria-live="polite"></span><button class="btn small" id="exportBtn" title="Salvar cópia dos seus dados">⇩ Backup</button><button class="btn small" id="importBtn" title="Restaurar cópia">⇧ Restaurar</button><input type="file" id="fileInput" accept=".json,application/json" hidden></div></header><section class="intro"><div><div class="eyebrow">Minha jornada</div><h2>Seu momento de hoje.</h2><p>Suas orações e seus compromissos, todos os dias.</p></div><div class="today-date" id="todayTitle"></div></section><nav class="tabs" role="tablist"><button class="tab" data-tab="hoje" aria-selected="true">Hoje</button><button class="tab" data-tab="promessas" aria-selected="false">Promessas</button><button class="tab" data-tab="oracoes" aria-selected="false">Orações</button></nav><section id="content" aria-live="polite"></section><footer class="foot">Seus dados são salvos neste navegador. Faça backups para não perder seu histórico.</footer></main><div class="modal-back" id="modalBack"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
 <script>
 (()=>{'use strict';
 const KEY='entre-preces-v1';const $=(s,root=document)=>root.querySelector(s);const $$=(s,root=document)=>[...root.querySelectorAll(s)];
@@ -302,7 +306,54 @@ async function initializeAuth(){
  if(!cfg||!cfg.url||!cfg.publishableKey||!window.supabase?.createClient){
   authError('Integração ainda não configurada. Configure supabase-config.js e publique no GitHub.');return;
  }
- db=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ db=window.supabase.createClient(cfg.url,cfg.publishableKey,{
+  auth:{
+    persistSession:true,
+    autoRefreshToken:true,
+    detectSessionInUrl:true,
+    experimental:{passkey:true}
+  }
+ });
+ const passkeyLogin=document.getElementById('cultivo-passkey-login');
+ const passkeyRegister=document.getElementById('cultivo-passkey-register');
+ const passkeyHelp=document.getElementById('cultivo-passkey-help');
+ const passkeysAvailable=window.isSecureContext &&
+   typeof window.PublicKeyCredential!=='undefined' &&
+   typeof db.auth.signInWithPasskey==='function' &&
+   typeof db.auth.registerPasskey==='function';
+ if(passkeysAvailable){
+  passkeyLogin.hidden=false;
+  passkeyRegister.hidden=false;
+  passkeyHelp.hidden=false;
+  passkeyLogin.addEventListener('click',async()=>{
+   authError('');
+   passkeyLogin.disabled=true;passkeyLogin.textContent='Verificando digital…';
+   try{
+    const {data,error}=await db.auth.signInWithPasskey();
+    if(error)throw error;
+    if(!data?.user)throw Error('Nenhum usuário retornado pela autenticação.');
+    await loadPrivateData(data.user);
+   }catch(err){
+    const off=err?.code==='passkey_disabled'||String(err?.message||'').includes('passkey_disabled');
+    authError(off?'A autenticação por digital ainda não foi ativada no Supabase.':('Não foi possível usar a digital: '+(err?.message||'tente entrar com sua senha.')));
+   }finally{passkeyLogin.disabled=false;passkeyLogin.textContent='Entrar com digital';}
+  });
+  passkeyRegister.addEventListener('click',async()=>{
+   if(!currentUser)return;
+   passkeyRegister.disabled=true;passkeyRegister.textContent='Cadastrando…';
+   try{
+    const {data,error}=await db.auth.registerPasskey();
+    if(error)throw error;
+    showStatus('Digital cadastrada com sucesso.');
+    alert('Chave de acesso cadastrada! No próximo login, você pode usar sua digital ou o bloqueio do celular. A sessão continuará salva.');
+   }catch(err){
+    const off=err?.code==='passkey_disabled'||String(err?.message||'').includes('passkey_disabled');
+    alert(off?
+     'A opção Passkeys ainda precisa ser ativada em Authentication → Passkeys no Supabase. Depois tente novamente.':
+     'Não foi possível cadastrar a digital: '+(err?.message||'tente novamente.'));
+   }finally{passkeyRegister.disabled=false;passkeyRegister.textContent='Cadastrar digital';}
+  });
+ }
  document.getElementById('cultivo-login-form').onsubmit=async e=>{
   e.preventDefault();authError('');
   const btn=document.getElementById('cultivo-login-button');btn.disabled=true;btn.textContent='Entrando…';
