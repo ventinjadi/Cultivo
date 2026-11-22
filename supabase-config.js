@@ -1,6 +1,6 @@
-// Configuração pública do frontend. Substitua apenas URL e chave publicável.
-// NUNCA coloque secret key, service_role ou senha neste arquivo.
+// Configuração pública do Supabase para o Cultivo.
+// A chave publishable pode ficar no frontend; nunca use secret/service_role aqui.
 window.CULTIVO_SUPABASE = {
-  url: "",
-  publishableKey: ""
+  url: "https://xnqhbicvmjzqxzqnatqp.supabase.co",
+  publishableKey: "sb_publishable_mVvI7bFqNltSEXdX_qjPGw_zyK8v6Q4"
 };
