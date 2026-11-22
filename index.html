@@ -245,6 +245,7 @@ const save=(description='Dados do Cultivo atualizados',prayerDate=null)=>{
  const action=String(description||'Dados do Cultivo atualizados').slice(0,180);
  const recordedDate=typeof prayerDate==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(prayerDate)?prayerDate:null;
  pendingSaves++;
+ showStatus('Salvando…');
  updateSaveIndicator('saving',action+' · Aguarde a confirmação.');
  saveChain=saveChain.catch(()=>{}).then(async()=>{
   try{
@@ -271,7 +272,7 @@ const save=(description='Dados do Cultivo atualizados',prayerDate=null)=>{
    lastSavedAt=result.data.updated_at;
    lastSavedAction=action;
    lastSaveError=null;
-   showStatus('Salvo');
+   showStatus(pendingSaves>1?'Salvando…':'Salvo');
   }catch(err){
    lastSaveError=err;
    console.error('Falha de sincronização Cultivo:',err);
@@ -485,7 +486,7 @@ function newPromise(existing=null){
    days:kind==='sequence'?days:target,creditedDays:credits,creditedAsOf:asOf,dependsOnId:depId,
    order:existing?.order??(Math.max(0,...ordered().map(x=>x.order??0))+1)};
   if(existing)state.promises=state.promises.map(x=>x.id===p.id?out:x);else state.promises.push(out);
-  save();close();render();
+  save((existing?'Promessa atualizada: ':'Promessa cadastrada: ')+name);close();render();
  };
 }
 function prayerDialog(p=null){
@@ -601,7 +602,7 @@ function prayerDialog(p=null){
    };
    if(p)Object.assign(p,edited);
    else state.prayers.push({id:prayerId,...edited});
-   await save();
+   await save((p?'Oração editada: ':'Oração cadastrada: ')+name);
    if(lastSaveError)throw Error('Não foi possível salvar os dados no banco: '+lastSaveError.message);
    if(oldPath&&oldPath!==savedImagePath){
     db.storage.from(PRAYER_IMAGE_BUCKET).remove([oldPath]).then(({error})=>{
@@ -649,7 +650,9 @@ function toggleHomePrayer(prayerId,date){
    if(already)checked.delete(prayerId);else checked.add(prayerId);
    if(checked.size)promise.log[date]=[...checked];else delete promise.log[date];
  }
- save();render();
+ const prayer=state.prayers.find(p=>p.id===prayerId);
+ save((already?'Oração desmarcada: ':'Oração concluída: ')+(prayer?.name||'oração'),date);
+ render();
 }
 let readerPrayerId=null;
 function markPrayerDone(prayerId,date){
@@ -662,7 +665,9 @@ function markPrayerDone(prayerId,date){
    const checked=new Set(promise.log[date]||[]);checked.add(prayerId);
    promise.log[date]=[...checked];
  }
- save();render();
+ const prayer=state.prayers.find(p=>p.id===prayerId);
+ save('Oração concluída: '+(prayer?.name||'oração'),date);
+ render();
 }
 function navigatePrayer(delta){
  if(!readerPrayerId)return;
@@ -733,10 +738,10 @@ $('#modalBack').addEventListener('touchend',e=>{
 $('#content').addEventListener('click',e=>{let x=e.target.closest('button');if(!x)return;let id=x.dataset.open||x.dataset.edit||x.dataset.delete||x.dataset.toggle;if(x.hasAttribute('data-promises-tab')){tab='promessas';return render()}
 if(x.hasAttribute('data-read-prayer'))return readPrayer(x.dataset.readPrayer);
 if(x.hasAttribute('data-home-prayer'))return toggleHomePrayer(x.dataset.homePrayer,viewDate);
-if(x.hasAttribute('data-new'))return newPromise();if(x.hasAttribute('data-add-prayer'))return prayerDialog();if(x.hasAttribute('data-today')){viewDate=today();return render()};if(x.hasAttribute('data-edit-prayer'))return prayerDialog(state.prayers.find(p=>p.id===x.dataset.editPrayer));if(x.hasAttribute('data-delete-prayer')){let p=state.prayers.find(p=>p.id===x.dataset.deletePrayer);if(!p)return;if(state.promises.some(x=>x.prayerIds.includes(p.id))){alert('Esta oração está vinculada a uma promessa. Remova o vínculo na edição da promessa antes de excluí-la.');return}if(confirm('Excluir esta oração da biblioteca?')){state.prayers=state.prayers.filter(x=>x.id!==p.id);save();render()}return}if(!id)return;let p=state.promises.find(p=>p.id===id);if(!p)return;if(x.hasAttribute('data-open'))return promiseDetails(p);if(x.hasAttribute('data-edit'))return newPromise(p);if(x.hasAttribute('data-delete')){if(state.promises.some(x=>x.id!==p.id&&dependencyFor(x)?.id===p.id)){alert('Esta promessa está vinculada como predecessora. Edite primeiro a dependência de outra promessa.');return;}if(confirm(`Excluir a promessa "${p.name}" e todo o histórico dela?`)){state.promises=state.promises.filter(x=>x.id!==p.id);save();render()}return}if(x.hasAttribute('data-toggle')){let date=x.dataset.date;if(!canLog(p,date)){alert('Este dia não está disponível para esta promessa.');return}p.log=p.log||{};let set=new Set(p.log[date]||[]),prayerId=x.dataset.prayer;set.has(prayerId)?set.delete(prayerId):set.add(prayerId);if(set.size)p.log[date]=[...set];else delete p.log[date];save();render()}});
+if(x.hasAttribute('data-new'))return newPromise();if(x.hasAttribute('data-add-prayer'))return prayerDialog();if(x.hasAttribute('data-today')){viewDate=today();return render()};if(x.hasAttribute('data-edit-prayer'))return prayerDialog(state.prayers.find(p=>p.id===x.dataset.editPrayer));if(x.hasAttribute('data-delete-prayer')){let p=state.prayers.find(p=>p.id===x.dataset.deletePrayer);if(!p)return;if(state.promises.some(x=>x.prayerIds.includes(p.id))){alert('Esta oração está vinculada a uma promessa. Remova o vínculo na edição da promessa antes de excluí-la.');return}if(confirm('Excluir esta oração da biblioteca?')){state.prayers=state.prayers.filter(x=>x.id!==p.id);save('Oração excluída: '+p.name);render()}return}if(!id)return;let p=state.promises.find(p=>p.id===id);if(!p)return;if(x.hasAttribute('data-open'))return promiseDetails(p);if(x.hasAttribute('data-edit'))return newPromise(p);if(x.hasAttribute('data-delete')){if(state.promises.some(x=>x.id!==p.id&&dependencyFor(x)?.id===p.id)){alert('Esta promessa está vinculada como predecessora. Edite primeiro a dependência de outra promessa.');return;}if(confirm(`Excluir a promessa "${p.name}" e todo o histórico dela?`)){state.promises=state.promises.filter(x=>x.id!==p.id);save('Promessa excluída: '+p.name);render()}return}if(x.hasAttribute('data-toggle')){let date=x.dataset.date;if(!canLog(p,date)){alert('Este dia não está disponível para esta promessa.');return}p.log=p.log||{};let set=new Set(p.log[date]||[]),prayerId=x.dataset.prayer;const wasChecked=set.has(prayerId);wasChecked?set.delete(prayerId):set.add(prayerId);if(set.size)p.log[date]=[...set];else delete p.log[date];const prayer=state.prayers.find(r=>r.id===prayerId);save((wasChecked?'Oração desmarcada: ':'Oração concluída: ')+(prayer?.name||'oração'),date);render()}});
 $('#cultivo-save-history').addEventListener('click',openSaveHistory);
 $('#content').addEventListener('change',e=>{if(e.target.id==='viewDate'){viewDate=e.target.value||today();if(viewDate>today())viewDate=today();render()}});
-$$('.tab').forEach(x=>x.addEventListener('click',()=>{tab=x.dataset.tab;render()}));$('#modalBack').addEventListener('click',e=>{const editing=e.target.closest('[data-reader-edit]');if(editing){const prayer=state.prayers.find(p=>p.id===editing.dataset.readerEdit);if(prayer)prayerDialog(prayer);return;}if(e.target.closest('[data-reader-next]')){navigatePrayer(1);return;}if(e.target.closest('[data-reader-prev]')){navigatePrayer(-1);return;}const toggle=e.target.closest('[data-reader-toggle]');if(toggle){const id=toggle.dataset.readerToggle;toggleHomePrayer(id,viewDate);readPrayer(id);return;}if(e.target.id==='modalBack'||e.target.closest('[data-close]'))close();let jump=e.target.closest('[data-jump]');if(jump){viewDate=jump.dataset.jump;tab='hoje';close();render()}});document.addEventListener('keydown',e=>{if(e.key==='Escape')close();if($('#modalBack').classList.contains('reader-open')&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){if(e.key==='ArrowRight'){e.preventDefault();navigatePrayer(1)}if(e.key==='ArrowLeft'){e.preventDefault();navigatePrayer(-1)}}});$('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({...state,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`cultivo-backup-${today()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};$('#importBtn').onclick=()=>$('#fileInput').click();$('#fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const incoming=JSON.parse(await f.text());if(!Array.isArray(incoming.prayers)||!Array.isArray(incoming.promises))throw Error('Formato inválido');if(confirm('Restaurar este backup? Os dados atuais serão substituídos.')){state={version:1,prayers:incoming.prayers,promises:incoming.promises,dailyPrayerLog:incoming.dailyPrayerLog||{}};save();render()}}catch{alert('Não foi possível ler este arquivo de backup.')}e.target.value=''};function showStatus(message){const el=document.getElementById('cultivo-sync-status');if(el)el.textContent=message;}
+$$('.tab').forEach(x=>x.addEventListener('click',()=>{tab=x.dataset.tab;render()}));$('#modalBack').addEventListener('click',e=>{const editing=e.target.closest('[data-reader-edit]');if(editing){const prayer=state.prayers.find(p=>p.id===editing.dataset.readerEdit);if(prayer)prayerDialog(prayer);return;}if(e.target.closest('[data-reader-next]')){navigatePrayer(1);return;}if(e.target.closest('[data-reader-prev]')){navigatePrayer(-1);return;}const toggle=e.target.closest('[data-reader-toggle]');if(toggle){const id=toggle.dataset.readerToggle;toggleHomePrayer(id,viewDate);readPrayer(id);return;}if(e.target.id==='modalBack'||e.target.closest('[data-close]'))close();let jump=e.target.closest('[data-jump]');if(jump){viewDate=jump.dataset.jump;tab='hoje';close();render()}});document.addEventListener('keydown',e=>{if(e.key==='Escape')close();if($('#modalBack').classList.contains('reader-open')&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){if(e.key==='ArrowRight'){e.preventDefault();navigatePrayer(1)}if(e.key==='ArrowLeft'){e.preventDefault();navigatePrayer(-1)}}});$('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({...state,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`cultivo-backup-${today()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};$('#importBtn').onclick=()=>$('#fileInput').click();$('#fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const incoming=JSON.parse(await f.text());if(!Array.isArray(incoming.prayers)||!Array.isArray(incoming.promises))throw Error('Formato inválido');if(confirm('Restaurar este backup? Os dados atuais serão substituídos.')){state={version:1,prayers:incoming.prayers,promises:incoming.promises,dailyPrayerLog:incoming.dailyPrayerLog||{}};save('Backup restaurado no Cultivo');render()}}catch{alert('Não foi possível ler este arquivo de backup.')}e.target.value=''};function showStatus(message){const el=document.getElementById('cultivo-sync-status');if(el)el.textContent=message;}
 async function loadPrivateData(user){
  currentUser=user;
  const {data,error}=await db.from('cultivo_data')
