@@ -257,12 +257,16 @@ function card(p,compact=false){const m=meta(p),dep=dependencyFor(p);
 function summary(){let active=state.promises.filter(p=>meta(p).status==='active'),finished=state.promises.filter(p=>['completed','ended'].includes(meta(p).status)),count=active.filter(p=>allDays(p).includes(viewDate)).length;return `<div class="summary"><div class="card"><div class="smalltext">Ativas</div><div class="value">${active.length}</div></div><div class="card"><div class="smalltext">Finalizadas</div><div class="value">${finished.length}</div></div><div class="card"><div class="smalltext">Feitas no dia</div><div class="value">${count}/${active.length}</div></div></div>`}
 function render(){document.title='Cultivo — orações e promessas';$('#todayTitle').textContent=new Date(today()+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});$$('.tab').forEach(x=>x.setAttribute('aria-selected',String(x.dataset.tab===tab)));const content=$('#content');if(tab==='hoje'){
   const active=state.promises.filter(p=>canLog(p,viewDate));
+  // A tela Hoje considera apenas as orações vinculadas às promessas ativas na data.
+  const dailyIds=new Set(active.flatMap(p=>p.prayerIds||[]));
+  const dailyPrayers=state.prayers.map((prayer,index)=>({prayer,index}))
+    .filter(({prayer})=>dailyIds.has(prayer.id));
   const isDone=id=>{
-    const linked=active.filter(p=>p.prayerIds.includes(id));
-    return linked.length?linked.every(p=>(p.log?.[viewDate]||[]).includes(id)):(state.dailyPrayerLog?.[viewDate]||[]).includes(id);
+    const linked=active.filter(p=>(p.prayerIds||[]).includes(id));
+    return linked.length>0&&linked.every(p=>(p.log?.[viewDate]||[]).includes(id));
   };
-  const completed=state.prayers.filter(p=>isDone(p.id)).length;
-  const total=state.prayers.length;
+  const completed=dailyPrayers.filter(({prayer})=>isDone(prayer.id)).length;
+  const total=dailyPrayers.length;
   const remaining=total-completed;
   content.innerHTML=`<div class="summary home-summary">
     <div class="card"><div class="smalltext">Concluídas hoje</div><div class="value">${completed}</div></div>
@@ -270,12 +274,12 @@ function render(){document.title='Cultivo — orações e promessas';$('#todayTi
     <div class="card"><div class="smalltext">Total de orações</div><div class="value">${total}</div></div>
   </div>
   <div class="section-head"><h2>Minhas orações</h2><div class="datebar"><input type="date" id="viewDate" value="${viewDate}" max="${today()}" aria-label="Data das orações"><button class="btn small" data-today>Hoje</button></div></div>
-  <p class="section-caption">Um dia de cada vez. Toque no nome para ler a oração. Toque no número para marcar como realizada. As promessas ativas são atualizadas automaticamente.</p>
-  <div class="home-prayer-grid">${state.prayers.map((prayer,i)=>{
+  <p class="section-caption">Somente as orações vinculadas às promessas ativas nesta data entram na meta de hoje. Toque no nome para ler ou no número para marcar como realizada.</p>
+  <div class="home-prayer-grid">${dailyPrayers.map(({prayer,index:i})=>{
     const done=isDone(prayer.id);
     const linked=active.filter(p=>p.prayerIds.includes(prayer.id)).length;
     return `<div class="home-prayer ${done?'checked':''}"><button class="home-prayer-check" type="button" data-home-prayer="${esc(prayer.id)}" aria-pressed="${done}" aria-label="${done?'Desmarcar':'Marcar'} ${esc(prayer.name)}"><span class="num">${done?'✓':i+1}</span></button><button class="home-prayer-open" type="button" data-read-prayer="${esc(prayer.id)}" aria-label="Ler ${esc(prayer.name)}"><span class="home-prayer-details"><strong>${esc(prayer.name)}</strong>${linked?`<small>Em ${linked} ${linked===1?'promessa':'promessas'} ${linked===1?'ativa':'ativas'}</small>`:''}</span><span class="prayer-sparkle">↗</span></button></div>`;
-  }).join('')}</div>
+  }).join('')}${dailyPrayers.length?'':'<div class="empty"><strong>Sem orações previstas para esta data.</strong>As orações aparecem aqui quando fazem parte de alguma promessa ativa. As demais continuam na biblioteca de Orações.</div>'}</div>
   ${active.length?`<div class="section-head"><h2>Promessas em andamento</h2><button class="btn small" data-promises-tab>Ver todas</button></div><div class="grid">${active.map(p=>card(p,true)).join('')}</div>`:''}
   ${state.promises.some(p=>meta(p).status==='wait')?`<p class="queue-note" style="margin-top:16px">As promessas dependentes começam depois da conclusão da promessa escolhida.</p>`:''}`;
 }
