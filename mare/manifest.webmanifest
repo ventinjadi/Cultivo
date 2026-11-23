@@ -1,0 +1,20 @@
+{
+  "id": "/Cultivo/mare/",
+  "name": "Maré — Diário emocional",
+  "short_name": "Maré",
+  "description": "Acompanhe emoções, energia, estresse, foco e os ritmos dos seus dias.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#10212b",
+  "theme_color": "#10212b",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
