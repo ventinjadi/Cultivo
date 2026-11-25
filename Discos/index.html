@@ -183,8 +183,9 @@ $('modalback').onclick=e=>{if(e.target===$('modalback'))closeModal()};
 $('loginForm').onsubmit=async e=>{e.preventDefault();$('loginBtn').disabled=true;$('loginError').textContent='';let {data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('loginBtn').disabled=false;if(error){$('loginError').textContent=error.message;return}await start(data.user)};
 }
 async function start(u){user=u;$('authView').hidden=true;$('appView').hidden=false;$('userEmail').textContent=u.email||'Conta conectada';try{await ensureLists();await loadData();bind()}catch(e){$('main').innerHTML='<div class="empty"><strong>Não foi possível carregar o acervo.</strong>'+esc(e.message||e)+'</div>';console.error(e)}}
-async function init(){bind();let {data}=await sb.auth.getSession();if(data.session?.user)await start(data.session.user);sb.auth.onAuthStateChange((_event,session)=>{if(session?.user&&!user)start(session.user);if(!session&&!user){$('appView').hidden=true;$('authView').hidden=false}})}
+async function init(){bind();let {data}=await sb.auth.getSession();if(data.session?.user)await start(data.session.user)}
 init();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));}
 })();
 </script>
 </body></html>
