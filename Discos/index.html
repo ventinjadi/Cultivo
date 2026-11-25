@@ -144,7 +144,7 @@ async function loadData(doRender=true){
 let names=['discos_albums','discos_tracks','discos_playlists','discos_lists','discos_album_lists'];
 let rs=await Promise.all(names.map(n=>sb.from(n).select('*')));
 let err=rs.find(r=>r.error);if(err)throw err.error;
-[albums,tracks,playlists,lists,albumLists]=rs.map(r=>r.data||[]);
+[albums,tracks,playlists,lists,albumLists]=rs.map(r=>r.data||[]);lists.sort((a,b)=>a.sort_order-b.sort_order);
 if(doRender)render();
 }
 async function ensureLists(){
