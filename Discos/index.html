@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0d1a22">
 <meta name="description" content="Seu catálogo, diário de audição e coleção musical.">
 <link rel="manifest" href="./manifest.webmanifest">
-<title>Discos — sua biblioteca musical</title>
+<title>Vitrola — sua biblioteca musical</title>
 <style>
 :root{--bg:#0d1a22;--panel:#14252d;--panel2:#192e36;--line:#29414a;--ink:#edf5f1;--muted:#9bb3b5;--teal:#a3ded4;--teal2:#72c2bd;--sage:#94b59a;--sand:#d4c6a4;--danger:#e6a69d;--shadow:0 18px 50px #0005}
 *{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% -10%,#24404a 0,transparent 40%),radial-gradient(ellipse at 100% 10%,#1b393e 0,transparent 33%),var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -33,7 +33,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-vis
 <body>
 <div id="authView" class="auth">
   <form id="loginForm" class="authbox">
-    <div class="authbrand"><div class="mark">♫</div><div><h1>Discos</h1><p>SUA BIBLIOTECA MUSICAL</p></div></div>
+    <div class="authbrand"><div class="mark"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect x="4" y="8" width="32" height="25" rx="4" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="20" r="8" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="20" r="2" fill="currentColor"/><path d="M28 12v8l-5 5M27 12l3 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 29h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><h1>Vitrola</h1><p>SUA BIBLIOTECA MUSICAL</p></div></div>
     <h2>Entre no seu acervo</h2><p>Use a mesma conta do Cultivo e do Maré para manter tudo sincronizado.</p>
     <div class="field"><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required></div>
     <div class="field"><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required></div>
@@ -44,14 +44,14 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-vis
 </div>
 <div id="appView" class="shell" hidden>
 <header class="top">
-  <div class="brand"><div class="mark"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="5" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="1.8" fill="currentColor"/><path d="M20 5v5M35 20h-5M20 35v-5M5 20h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><div><h1>Discos</h1><small>ouvir · sentir · lembrar</small></div></div>
+  <div class="brand"><div class="mark"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect x="4" y="8" width="32" height="25" rx="4" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="20" r="8" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="20" r="2" fill="currentColor"/><path d="M28 12v8l-5 5M27 12l3 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 29h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><h1>Vitrola</h1><small>ouvir · sentir · lembrar</small></div></div>
   <div class="topright"><span id="userEmail" class="userpill"></span><button id="logoutBtn" class="btn ghost small">Sair</button></div>
 </header>
 <nav class="nav" id="nav">
 <button data-page="inicio" class="active">Visão geral</button><button data-page="acervo">Álbuns</button><button data-page="listas">Minhas listas</button><button data-page="playlists">Playlists</button><button data-page="ranking">Ranking</button>
 </nav>
 <main id="main"></main>
-<div class="foot">DISCOS · SUA MEMÓRIA MUSICAL, FAIXA POR FAIXA</div>
+<div class="foot">VITROLA · SUA MEMÓRIA MUSICAL, FAIXA POR FAIXA</div>
 </div>
 <div id="modalback" class="modalback"><div class="modal" id="modal"></div></div>
 <div id="toast" class="toast"></div>
