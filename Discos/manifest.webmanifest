@@ -1,6 +1,6 @@
 {
-  "name": "Discos — sua biblioteca musical",
-  "short_name": "Discos",
+  "name": "Vitrola — sua biblioteca musical",
+  "short_name": "Vitrola",
   "description": "Seu catálogo, diário de audição e coleção musical.",
   "start_url": "./",
   "scope": "./",
