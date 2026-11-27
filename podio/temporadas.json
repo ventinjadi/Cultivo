@@ -1,0 +1,235 @@
+{
+  "updatedAt": "2026-11-27",
+  "entries": [
+    {
+      "sport": "Futebol masculino",
+      "title": "Premier League / Champions League",
+      "start": "",
+      "end": "",
+      "description": "Em andamento na temporada europeia; datas específicas variam. Acompanhar Real Madrid e Manchester City.",
+      "url": "https://www.premierleague.com/",
+      "kind": "atual",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Futebol masculino",
+      "title": "Brasileirão 2026",
+      "start": "",
+      "end": "",
+      "description": "Temporada de 2026 em fase final; confira a programação do Vasco.",
+      "url": "https://www.cbf.com.br/",
+      "kind": "atual",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Futebol masculino",
+      "title": "Campeonato Carioca",
+      "start": "2027-01-13",
+      "end": "2027-03-07",
+      "description": "Primeira rodada: Vasco × Madureira; data individual e transmissão a confirmar.",
+      "url": "https://www.tupi.fm/sentinelas/ferj-define-grupos-e-data-de-inicio-do-campeonato-carioca-de-2027/",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Futebol masculino",
+      "title": "Brasileirão Série A 2027",
+      "start": "2027-01-27",
+      "end": "2027-12-01",
+      "description": "Início do campeonato divulgado pela CBF.",
+      "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/campeonato-brasileiro/a/cbf-oficializa-calendario-do-futebol-profissional-masculino-de-2027",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Futebol masculino",
+      "title": "Seleção Brasileira",
+      "start": "",
+      "end": "",
+      "description": "Próxima convocação e jogos a confirmar; acompanhar datas FIFA.",
+      "url": "https://www.cbf.com.br/",
+      "kind": "pendente",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Futebol feminino",
+      "title": "Seleção Brasileira",
+      "start": "",
+      "end": "",
+      "description": "CBF negocia amistosos preparatórios para a Copa; datas dos próximos jogos a verificar.",
+      "url": "https://www.fifa.com/pt/articles/jogos-brasil-feminino-2026-2027",
+      "kind": "pendente",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Futebol feminino",
+      "title": "Copa do Mundo Feminina",
+      "start": "2027-06-24",
+      "end": "2027-07-25",
+      "description": "Copa no Brasil, com Salvador entre as sedes.",
+      "url": "https://inside.fifa.com/organisation/news/draw-procedures-preliminary-phase-womens-world-cup-2027-play-off-tournament",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Vôlei feminino",
+      "title": "Liga das Nações (VNL)",
+      "start": "2027-06-02",
+      "end": "2027-07-25",
+      "description": "Brasil × Itália abre a VNL no Brasil; tabela detalhada e transmissão a confirmar.",
+      "url": "https://www.fivb.com/vnl-2027-host-countries-revealed-and-the-must-see-matchups-set/",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Vôlei masculino",
+      "title": "Liga das Nações (VNL)",
+      "start": "2027-06-09",
+      "end": "2027-08-01",
+      "description": "Primeira semana também terá etapa no Brasil.",
+      "url": "https://www.fivb.com/vnl-2027-host-countries-revealed-and-the-must-see-matchups-set/",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Vôlei masculino",
+      "title": "Superliga Brasileira",
+      "start": "",
+      "end": "",
+      "description": "Temporada 2026/27 em andamento na data da consulta; confira rodadas na CBV.",
+      "url": "https://cbv.com.br/volei-de-quadra/superliga-a-masculina",
+      "kind": "atual",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Basquete masculino",
+      "title": "NBA",
+      "start": "",
+      "end": "2027-04-11",
+      "description": "Temporada regular em andamento; playoffs na sequência. Prioridade: Lakers.",
+      "url": "https://www.nba.com/news/2026-27-nba-regular-season-schedule",
+      "kind": "atual",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Futebol americano",
+      "title": "NFL",
+      "start": "2026-09-09",
+      "end": "2027-01-10",
+      "description": "Temporada regular em andamento; playoffs na sequência. Prioridade: Chiefs.",
+      "url": "https://media.nfl.com/football-information/2026/news/2026-nfl-schedule-announced",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Ginástica artística feminina",
+      "title": "Copa do Mundo de Cottbus",
+      "start": "2027-02-25",
+      "end": "2027-02-28",
+      "description": "Etapa internacional de aparelhos; verificar presença das brasileiras.",
+      "url": "https://www.gymnastics.sport/site/events/detail.php?id=17940&type=sport",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Maratonas e corridas de rua",
+      "title": "São Silvestre",
+      "start": "2026-12-31",
+      "end": "2026-12-31",
+      "description": "Acompanhar resultados principais.",
+      "url": "https://www.saosilvestre.com.br/",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Maratonas e corridas de rua",
+      "title": "Maratona de São Paulo",
+      "start": "2027-04-04",
+      "end": "2027-04-04",
+      "description": "Próxima edição anunciada pela organização.",
+      "url": "https://www.yescom.com.br/maratonasp/2027/",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Maratonas e corridas de rua",
+      "title": "Maratona Salvador",
+      "start": "2027-09-25",
+      "end": "2027-09-26",
+      "description": "Programação anunciada na agenda municipal.",
+      "url": "https://agenda.salvador.br/evento/maratona-salvador-2027",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "MMA",
+      "title": "UFC Fight Night — Adesanya × Magomedov",
+      "start": "2026-12-05",
+      "end": "2026-12-05",
+      "description": "Próximo card em destaque; calendário de 2027 será atualizado conforme os anúncios.",
+      "url": "https://www.ufc.com/index.php/news/ufc-returns-to-saudi-arabia-middleweight-showdown-between-israel-adesanya-shara-magomedov",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Tênis masculino",
+      "title": "Australian Open",
+      "start": "2027-01-10",
+      "end": "2027-01-31",
+      "description": "Semana de abertura 10–16/01 (inclui qualifying); chave principal começa 17/01.",
+      "url": "https://ausopen.com/articles/news/australian-open-2027-dates-announced",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Skate street",
+      "title": "SLS Super Crown",
+      "start": "2026-12-12",
+      "end": "2026-12-13",
+      "description": "Final da temporada em São Paulo; acompanhar Rayssa Leal.",
+      "url": "https://www.streetleague.com/supercrownwc2026",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Skate street",
+      "title": "Circuito SLS / World Skate 2027",
+      "start": "",
+      "end": "",
+      "description": "Calendário de retorno a confirmar; não presumir datas.",
+      "url": "https://www.streetleague.com/",
+      "kind": "pendente",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Fórmula 1",
+      "title": "Testes de pré-temporada",
+      "start": "2027-02-24",
+      "end": "2027-02-27",
+      "description": "Testes no Bahrein; não valem pontos.",
+      "url": "https://www.formula1.com/en/racing/2027",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "Fórmula 1",
+      "title": "GP do Bahrein — abertura 2027",
+      "start": "2027-03-12",
+      "end": "2027-03-14",
+      "description": "Primeiro GP da temporada de 2027; 2026 ainda está em fase final.",
+      "url": "https://www.formula1.com/en/racing/2027",
+      "kind": "confirmado",
+      "verified": "2026-11-27"
+    },
+    {
+      "sport": "E-sports",
+      "title": "CBLOL 2027",
+      "start": "",
+      "end": "",
+      "description": "Abertura do circuito de 2027 ainda sem data confirmada na consulta; acompanhar paiN Gaming.",
+      "url": "https://lolesports.com/pt-BR/news/lol-esports-2027-and-beyond",
+      "kind": "pendente",
+      "verified": "2026-11-27"
+    }
+  ]
+}
