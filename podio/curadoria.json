@@ -1,0 +1,58 @@
+{
+  "weekStart": "2026-11-30",
+  "summary": "Primeira seleção parcial: a despedida da temporada de Fórmula 1, o Manchester City em rodada de meio de semana e o card internacional do UFC. A transmissão da F1 está anunciada em TV aberta; as demais precisam de confirmação no Brasil.",
+  "events": [
+    {
+      "id": "f1-20261206",
+      "title": "GP de Abu Dhabi",
+      "sport": "Fórmula 1",
+      "comp": "Grande Prêmio",
+      "date": "2026-12-06",
+      "time": "10:00",
+      "duration": 120,
+      "priority": 3,
+      "why": "Última corrida da temporada de 2026. Uma oportunidade de acompanhar a conclusão do campeonato de pilotos e construtores.",
+      "watch": "TV Globo (sinal aberto)",
+      "access": "Gratuito",
+      "url": "https://ge.globo.com/motor/formula-1/noticia/2025/12/08/f1-2026-saiba-todos-os-detalhes-da-cobertura-da-globo.ghtml",
+      "source": "Globo / ge — programação anunciada",
+      "verified": "2026-11-27",
+      "result": ""
+    },
+    {
+      "id": "city-20261202",
+      "title": "Manchester City × Leeds United",
+      "sport": "Futebol masculino",
+      "comp": "Premier League",
+      "date": "2026-12-02",
+      "time": "16:30",
+      "duration": 120,
+      "priority": 2,
+      "why": "Jogo de um dos seus clubes favoritos em uma rodada de meio de semana. Vale acompanhar a sequência do City no campeonato inglês.",
+      "watch": "Transmissão no Brasil a confirmar",
+      "access": "A confirmar",
+      "url": "https://www.premierleague.com/en/news/4743152/fixture-amendments-for-premier-league-matches-in-december/",
+      "source": "Premier League — calendário oficial (19h30 GMT)",
+      "verified": "2026-11-27",
+      "result": ""
+    },
+    {
+      "id": "ufc-20261205",
+      "title": "UFC Arábia Saudita — Adesanya × Magomedov",
+      "sport": "MMA",
+      "comp": "UFC Fight Night",
+      "date": "2026-12-05",
+      "time": "11:00",
+      "duration": 360,
+      "priority": 2,
+      "why": "Card internacional do UFC. Horário informado pelo calendário oficial; participações brasileiras e transmissão precisam de nova conferência.",
+      "watch": "A confirmar",
+      "access": "A confirmar",
+      "url": "https://www.ufc.com.br/news/calendario-ufc-2026-programacao-completa-proximos-eventos-resultados",
+      "source": "UFC Brasil — calendário oficial",
+      "verified": "2026-11-27",
+      "result": ""
+    }
+  ],
+  "updatedAt": "2026-11-27"
+}
